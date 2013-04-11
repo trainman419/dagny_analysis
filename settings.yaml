@@ -1,0 +1,19 @@
+topics:
+  encoder: [ count, steer ]
+  gps: [ latitude, longitude ]
+  heading: data
+  magnetic:
+    vector: [x, y, z]
+  odom:
+    pose:
+      pose:
+        position: [ x, y, z ]
+        orientation: [ x, y, z, w ]
+    twist:
+      twist:
+        linear: [ x, y, z ]
+        angular: [ x, y, z ]
+  velocity:
+    twist:
+      linear: [ x, y, z ]
+      angular: [ x, y, z ]
