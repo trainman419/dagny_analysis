@@ -52,7 +52,8 @@ if __name__ == '__main__':
     files[topic].write(s + "\n")
 
   for topic,msg,t in bag.read_messages():
-    topic = topic[1:]
+    if topic[0] == '/':
+      topic = topic[1:]
     if topic in files:
       stamp = t.to_sec()
       if hasattr(msg, 'header'):
