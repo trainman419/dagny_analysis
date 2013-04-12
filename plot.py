@@ -17,14 +17,14 @@ def get_gps(data_dir):
         raw = f.read()
     for x in raw.splitlines()[:5]:
         print(x)
-    seq = []
+    time = []
     lat = []
     lng = []
     for x in raw.splitlines()[1:]:
         x = x.split(',')
-        seq.append(int(x[1]))
-        lat.append(float(x[6]))
-        lng.append(float(x[7]))
+        time.append(float(x[0]))
+        lat.append(float(x[1]))
+        lng.append(float(x[2]))
     for i, x in enumerate(lat):
         if i == 0:
             continue
@@ -32,7 +32,7 @@ def get_gps(data_dir):
             print(i)
             del lat[i]
             del lng[i]
-            del seq[i]
+            del time[i]
     for i, x in enumerate(lng):
         if i == 0:
             continue
@@ -40,11 +40,11 @@ def get_gps(data_dir):
             print(i)
             del lat[i]
             del lng[i]
-            del seq[i]
+            del time[i]
     subplot(211)
-    plot(seq, lat)
+    plot(time, lat)
     subplot(212)
-    plot(seq, lng)
+    plot(time, lng)
     show()
     utmx = []
     utmy = []
@@ -52,7 +52,7 @@ def get_gps(data_dir):
         x, y = latlong2utm(lati, lngi)
         utmx.append(x)
         utmy.append(y)
-    return seq, utmx, utmy
+    return time, utmx, utmy
 
 
 def main():
@@ -62,7 +62,7 @@ def main():
 
     data_dir = sys.argv[1]
 
-    seq, utmx, utmy = get_gps(data_dir) or [None, None, None]
+    time, utmx, utmy = get_gps(data_dir) or [None, None, None]
     utmx_filt = [x - utmx[0] for x in utmx]
     utmy_filt = [y - utmy[0] for y in utmy]
     for i, x in enumerate(utmx_filt):
@@ -72,7 +72,7 @@ def main():
             print('x', i)
             del utmx_filt[i]
             del utmy_filt[i]
-            del seq[i]
+            del time[i]
     for i, x in enumerate(utmy_filt):
         if i == 0:
             continue
@@ -80,15 +80,15 @@ def main():
             print('y', i)
             del utmx_filt[i]
             del utmy_filt[i]
-            del seq[i]
+            del time[i]
     # subplot(311)
-    # plot(seq, utmx_filt)
+    # plot(time, utmx_filt)
     # subplot(312)
-    # plot(seq, utmy_filt)
+    # plot(time, utmy_filt)
     # subplot(313)
-    print(len(seq))
+    print(len(time))
     axis('equal')
-    scatter(utmx_filt, utmy_filt, c=seq)
+    scatter(utmx_filt, utmy_filt, c=time)
     show()
 
 
