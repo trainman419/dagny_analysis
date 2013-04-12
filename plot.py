@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 
@@ -5,10 +7,10 @@ from pylab import *
 
 from utm import latlong2utm
 
-gps_file = 'grass/gps.csv'
 
+def get_gps(data_dir):
+    gps_file = os.path.join(data_dir, 'gps.csv')
 
-def get_gps():
     if not os.path.exists(gps_file):
         sys.exit('no ' + gps_file)
     with open(gps_file) as f:
@@ -54,7 +56,13 @@ def get_gps():
 
 
 def main():
-    seq, utmx, utmy = get_gps() or [None, None, None]
+    if len(sys.argv) != 2:
+        print "Usage: plot.py <dir>"
+        sys.exit(1)
+
+    data_dir = sys.argv[1]
+
+    seq, utmx, utmy = get_gps(data_dir) or [None, None, None]
     utmx_filt = [x - utmx[0] for x in utmx]
     utmy_filt = [y - utmy[0] for y in utmy]
     for i, x in enumerate(utmx_filt):
@@ -86,3 +94,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# vim: set ts=4 sw=4
