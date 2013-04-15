@@ -1,2 +1,8 @@
 *.bag
 *.pyc
+grass
+out-and-back
+static
+.DS_Store
+loop
+waypoints
