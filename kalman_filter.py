@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+
+import sys
+
 from pylab import plot, scatter, show, axis, quiver, savefig, cla
 
-from plot import get_series, get_gps_utm
+from plot import get_series, get_gps_utm, get_gps
 
 from math import sin, cos, pi, atan2
 
@@ -132,7 +136,7 @@ def dead_reckon(enc_time, enc_count, enc_steer, gps_time, utm_x, utm_y, odomx, o
     plot(utm_x, utm_y)
     # scatter(utm_x, utm_y, c=gps_time)
     plot([x * -1 for x in xs], [y * -1 for y in ys])
-    plot(odomx, odomy)
+    #plot(odomx, odomy)
     # quiver(xs, ys, [cos(x) for x in thetas], [sin(x) for x in thetas], minlength=2)
     if 'filename' in kwargs:
         print kwargs['filename']
@@ -144,6 +148,9 @@ def dead_reckon(enc_time, enc_count, enc_steer, gps_time, utm_x, utm_y, odomx, o
 
 def main():
     data_dir = 'out-and-back'
+    if len(sys.argv) > 1:
+        data_dir = sys.argv[1]
+
     enc_time, enc_count, enc_steer = get_series(
         data_dir,
         'encoder',
@@ -163,7 +170,7 @@ def main():
         'magnetic',
         [('time', float), ('vector.x', float), ('vector.y', float), ('vector.z', float)]
     )
-    gps_time, utmx, utmy = get_gps_utm(data_dir)
+    gps_time, utmx, utmy = get_gps(data_dir)
 
     enc_time = delta_from_start(enc_time)
     enc_count = pairwise_diff(enc_count)
