@@ -2,7 +2,9 @@
 
 import sys
 
-from pylab import plot, scatter, show, axis, quiver, savefig, cla
+from pylab import plot, scatter, show, axis, quiver, savefig, cla, get_cmap
+import matplotlib.colors as colors
+import matplotlib.cm as cmx
 
 from plot import get_series, get_gps_utm, get_gps
 
@@ -83,6 +85,15 @@ def kf_filter(enc_time, enc_count, enc_steer):
     pass
 
 
+def plot_steps(x, y):
+    steps = min(len(x), 100)
+    cmap = cmx.ScalarMappable(norm=colors.Normalize(vmin=0, vmax=steps-1), 
+        cmap=get_cmap('jet'))
+    s = len(x) / steps
+    for i in range(steps-1):
+        plot(x[s*i:s*(i+1)+1], y[s*i:s*(i+1)+1], c=cmap.to_rgba(i))
+    plot(x[s*i:-1], y[s*i:-1], c=cmap.to_rgba(steps-1))
+
 def dead_reckon(enc_time, enc_count, enc_steer, gps_time, utm_x, utm_y, odomx, odomy, magx, magy, **kwargs):
     xs = [0]
     ys = [0]
@@ -133,9 +144,9 @@ def dead_reckon(enc_time, enc_count, enc_steer, gps_time, utm_x, utm_y, odomx, o
     #for
 
     axis('equal')
-    plot(utm_x, utm_y)
+    plot_steps(utm_x, utm_y)
     # scatter(utm_x, utm_y, c=gps_time)
-    plot([x * -1 for x in xs], [y * -1 for y in ys])
+    plot_steps([x * -1 for x in xs], [y * -1 for y in ys])
     #plot(odomx, odomy)
     # quiver(xs, ys, [cos(x) for x in thetas], [sin(x) for x in thetas], minlength=2)
     if 'filename' in kwargs:
